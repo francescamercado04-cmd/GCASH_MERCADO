@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Transactions;
-
+using GcashPaymentAppService;
+using GcashPaymentModels;
 class GCASH
 {
     static double balance = 10000;
 
-    static void Main(String[] args) { 
+    static GcashAppService app = new GcashAppService();
+    static GcashModels model = new GcashModels();
 
+    static void Main(String[] args) {
 
-int choice;
+        
+        CheckMPIN();
+
+        int choice;
 
 do
 {
@@ -29,8 +35,25 @@ do
 
 Console.WriteLine("Thank You for using GCash!");
 }
+    static void CheckMPIN()
+    {
+        string input;
 
-static void CashIn()
+        do
+        {
+            Console.Write("Enter MPIN: ");
+            input = Console.ReadLine();
+
+            if (input != app.GetMPIN())
+            {
+                Console.WriteLine("Incorrect MPIN. Try again.");
+            }
+
+        } while (input != app.GetMPIN());
+
+        Console.WriteLine("Access Granted!\n");
+    }
+    static void CashIn()
 {
     Console.WriteLine("\n ----- CASH IN OPTIONS -----");
     Console.WriteLine("1. Over the Counter ");
@@ -57,23 +80,37 @@ static void ExpressSend()
     Console.Write("Enter Amount to Send: P" );
     double amount = Convert.ToDouble(Console.ReadLine());
 
-    if (amount <= balance)
-{
-    balance -= amount;
+        Random rnd = new Random();
+        int otp = rnd.Next(100000, 999999);
 
+        Console.WriteLine("OTP: " + otp);
+        Console.Write("Enter OTP: ");
 
-    Console.WriteLine("\nConfirmed");
-    Console.WriteLine("Sent Successfully!");
+        int userOtp = Convert.ToInt32(Console.ReadLine());
 
-    Console.WriteLine("\n-----RECEIPT-----");
-    Console.WriteLine("To: " + number);
-    Console.WriteLine("Amount Sent: P" + amount);
-    Console.WriteLine("Remaining Balance: P" + balance);
-}
-else
-{
-    Console.WriteLine("Insufficient Balance");
-}
-}
+        if (userOtp == otp)
+        {
+            bool sent = app.ExpressSend(amount);
+
+            if (sent)
+            {
+                Console.WriteLine("\nConfirmed");
+                Console.WriteLine("Sent Successfully!");
+
+                Console.WriteLine("\n-----RECEIPT-----");
+                Console.WriteLine("To: " + number);
+                Console.WriteLine("Amount Sent: P" + amount);
+                Console.WriteLine("Remaining Balance: P" + balance);
+            }
+            else
+            {
+                Console.WriteLine("Insufficient Balance.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid OTP. Transaction Cancelled.");
+        }
+    }
 
 }

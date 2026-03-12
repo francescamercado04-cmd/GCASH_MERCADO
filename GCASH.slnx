@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="GCASH/GCASH.csproj" />
+  <Project Path="GcashPaymentAppService/GcashPaymentAppService.csproj" Id="dfbda76b-f696-41a9-b1c7-12b36838afa7" />
+  <Project Path="GcashPaymentDataService/GcashPaymentDataService.csproj" Id="4166f915-d1be-43a1-9440-724474c8b619" />
+  <Project Path="GcashPaymentModels/GcashPaymentModels.csproj" Id="ab463be9-67c9-45c4-8d3e-6d9ac6acee1b" />
 </Solution>
