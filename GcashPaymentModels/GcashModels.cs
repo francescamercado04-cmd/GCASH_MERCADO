@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GcashPaymentModels
+﻿namespace GcashPaymentModels
 {
     public class GcashModels
     {
