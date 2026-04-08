@@ -5,7 +5,7 @@ namespace GcashPaymentAppService
 {
     public class GcashAppService
     {
-        private GcashDataService data = new GcashDataService();
+        private GcashDataService data = new GcashDataService(new GcashDBData());
 
         public double GetBalance()
         {
@@ -28,6 +28,36 @@ namespace GcashPaymentAppService
                 balance -= amount;
                 data.UpdateBalance(balance);
                 data.AddTransaction(number, amount);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool BuyLoad(string number, double amount)
+        {
+            double balance = data.GetBalance();
+
+            if (amount <= balance)
+            {
+                balance -= amount;
+                data.UpdateBalance(balance);
+                data.AddTransaction("LOAD-" + number, amount);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TransferToBank(string bank, string account, double amount)
+        {
+            double balance = data.GetBalance();
+
+            if (amount <= balance)
+            {
+                balance -= amount;
+                data.UpdateBalance(balance);
+                data.AddTransaction(bank + "-" + account, amount);
                 return true;
             }
 

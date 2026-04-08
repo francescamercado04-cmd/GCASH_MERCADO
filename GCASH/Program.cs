@@ -19,6 +19,8 @@ class GCASH
             Console.WriteLine("2. Express Send");
             Console.WriteLine("3. View Transaction History");
             Console.WriteLine("4. Exit");
+            Console.WriteLine("5. Buy Load");
+            Console.WriteLine("6. Transfer to Bank");
             Console.Write("Choose: ");
 
             choice = Convert.ToInt32(Console.ReadLine());
@@ -26,6 +28,8 @@ class GCASH
             if (choice == 1) CashIn();
             else if (choice == 2) ExpressSend();
             else if (choice == 3) ViewTransactionHistory();
+            else if (choice == 5) BuyLoad();
+            else if (choice == 6) TransferToBank();
 
         } while (choice != 4);
 
@@ -86,6 +90,35 @@ class GCASH
         {
             Console.WriteLine("Invalid OTP.");
         }
+    }
+
+    static void BuyLoad()
+    {
+        Console.Write("Enter Mobile Number: ");
+        string number = Console.ReadLine();
+
+        Console.Write("Enter Amount: P ");
+        double amount = Convert.ToDouble(Console.ReadLine());
+
+        bool success = app.BuyLoad(number, amount);
+
+        Console.WriteLine(success ? "Load Purchased Successfully!" : "Insufficient Balance.");
+    }
+
+    static void TransferToBank()
+    {
+        Console.Write("Enter Bank Name: ");
+        string bank = Console.ReadLine();
+
+        Console.Write("Enter Account Number: ");
+        string acc = Console.ReadLine();
+
+        Console.Write("Enter Amount: P ");
+        double amount = Convert.ToDouble(Console.ReadLine());
+
+        bool success = app.TransferToBank(bank, acc, amount);
+
+        Console.WriteLine(success ? "Transfer Successful!" : "Insufficient Balance.");
     }
 
     static void ViewTransactionHistory()
