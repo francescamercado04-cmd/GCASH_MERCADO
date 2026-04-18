@@ -14,6 +14,8 @@ namespace GcashPaymentAppService
 
         public void CashIn(double amount)
         {
+            if (amount <= 0) return; 
+
             double balance = data.GetBalance();
             balance += amount;
             data.UpdateBalance(balance);
@@ -21,6 +23,8 @@ namespace GcashPaymentAppService
 
         public bool ExpressSend(string number, double amount)
         {
+            if (amount <= 0) return false; 
+
             double balance = data.GetBalance();
 
             if (amount <= balance)
@@ -36,6 +40,8 @@ namespace GcashPaymentAppService
 
         public bool BuyLoad(string number, double amount)
         {
+            if (amount <= 0) return false; 
+
             double balance = data.GetBalance();
 
             if (amount <= balance)
@@ -51,6 +57,8 @@ namespace GcashPaymentAppService
 
         public bool TransferToBank(string bank, string account, double amount)
         {
+            if (amount <= 0) return false; 
+
             double balance = data.GetBalance();
 
             if (amount <= balance)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using GcashPaymentAppService;
 
 class GCASH
@@ -23,7 +24,7 @@ class GCASH
             Console.WriteLine("6. Transfer to Bank");
             Console.Write("Choose: ");
 
-            choice = Convert.ToInt32(Console.ReadLine());
+            choice = GetNumberOnlyInt();
 
             if (choice == 1) CashIn();
             else if (choice == 2) ExpressSend();
@@ -36,6 +37,94 @@ class GCASH
         Console.WriteLine("Thank You for using GCash!");
     }
 
+    
+         static int GetNumberOnlyInt()
+    {
+        int value;
+
+        while (!int.TryParse(Console.ReadLine(), out value))
+        {
+            Console.Write("Numbers only. Try again: ");
+        }
+
+        return value;
+    }
+
+    static double GetValidAmount()
+    {
+        double amount;
+
+        while (true)
+        {
+            if (!double.TryParse(Console.ReadLine(), out amount))
+            {
+                Console.Write("Numbers only. Enter amount: ");
+                continue;
+            }
+
+            if (amount <= 0)
+            {
+                Console.Write("Amount must be greater than 0: ");
+                continue;
+            }
+
+            return amount;
+        }
+    }
+
+    static string GetLettersOnly(string message)
+    {
+        string input;
+
+        do
+        {
+            Console.Write(message);
+            input = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                Console.WriteLine("Input cannot be empty.");
+                continue;
+            }
+
+            if (!input.All(char.IsLetter))
+            {
+                Console.WriteLine("Letters only. Try again.");
+                input = "";
+            }
+
+        } while (string.IsNullOrWhiteSpace(input));
+
+        return input;
+    }
+
+    static string GetDigitsOnly(string message)
+    {
+        string input;
+
+        do
+        {
+            Console.Write(message);
+            input = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                Console.WriteLine("Input cannot be empty.");
+                continue;
+            }
+
+            if (!input.All(char.IsDigit))
+            {
+                Console.WriteLine("Numbers only. Try again.");
+                input = "";
+            }
+
+        } while (string.IsNullOrWhiteSpace(input));
+
+        return input;
+    }
+
+    
     static void CheckMPIN()
     {
         string input;
@@ -43,8 +132,7 @@ class GCASH
 
         do
         {
-            Console.Write("Enter MPIN: ");
-            input = Console.ReadLine();
+            input = GetDigitsOnly("Enter MPIN: ");
 
             if (input != mpin)
                 Console.WriteLine("Incorrect MPIN.");
@@ -57,7 +145,7 @@ class GCASH
     static void CashIn()
     {
         Console.Write("Enter Amount: P ");
-        double amount = Convert.ToDouble(Console.ReadLine());
+        double amount = GetValidAmount();
 
         app.CashIn(amount);
 
@@ -66,24 +154,23 @@ class GCASH
 
     static void ExpressSend()
     {
-        Console.Write("Send To: ");
-        string number = Console.ReadLine();
+        string number = GetDigitsOnly("Send To (numbers only): ");
 
         Console.Write("Enter Amount: P ");
-        double amount = Convert.ToDouble(Console.ReadLine());
+        double amount = GetValidAmount();
 
         Random rnd = new Random();
         int otp = rnd.Next(100000, 999999);
 
         Console.WriteLine("OTP: " + otp);
-        Console.Write("Enter OTP: ");
 
-        int userOtp = Convert.ToInt32(Console.ReadLine());
+        int userOtp;
+        Console.Write("Enter OTP: ");
+        userOtp = GetNumberOnlyInt();
 
         if (userOtp == otp)
         {
             bool sent = app.ExpressSend(number, amount);
-
             Console.WriteLine(sent ? "Sent Successfully!" : "Insufficient Balance.");
         }
         else
@@ -94,11 +181,10 @@ class GCASH
 
     static void BuyLoad()
     {
-        Console.Write("Enter Mobile Number: ");
-        string number = Console.ReadLine();
+        string number = GetDigitsOnly("Enter Mobile Number: ");
 
         Console.Write("Enter Amount: P ");
-        double amount = Convert.ToDouble(Console.ReadLine());
+        double amount = GetValidAmount();
 
         bool success = app.BuyLoad(number, amount);
 
@@ -107,14 +193,11 @@ class GCASH
 
     static void TransferToBank()
     {
-        Console.Write("Enter Bank Name: ");
-        string bank = Console.ReadLine();
-
-        Console.Write("Enter Account Number: ");
-        string acc = Console.ReadLine();
+        string bank = GetLettersOnly("Enter Bank Name: ");
+        string acc = GetDigitsOnly("Enter Account Number: ");
 
         Console.Write("Enter Amount: P ");
-        double amount = Convert.ToDouble(Console.ReadLine());
+        double amount = GetValidAmount();
 
         bool success = app.TransferToBank(bank, acc, amount);
 
